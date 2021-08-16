@@ -12,7 +12,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm run build
+RUN npx prisma generate && npm run build
 
 # Create a new image as runner image with source compiled
 FROM node:14-alpine

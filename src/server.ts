@@ -1,26 +1,14 @@
-import 'express-async-errors';
-import express, { NextFunction, Request, Response } from 'express';
-import { router as userRouter } from '@routes/user_routes';
+import { buildServer } from './app';
 
-const app = express();
+const serverPromise = buildServer();
 const PORT = 8080;
 
-// MIDDLEWARES
-app.use(express.json());
-
-// Adding our custom routes to the app
-app.use(userRouter);
-
-// Last middleware to capture internal errors
-app.use(
-  (error: Error, request: Request, response: Response, next: NextFunction) => {
-    return response.json({
-      status: 500,
-      message: 'Internal Server error',
-    });
-  }
+serverPromise.then((server) =>
+  server.listen(PORT, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Server listening at ${address}`);
+  })
 );
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});

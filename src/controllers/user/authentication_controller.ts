@@ -1,8 +1,7 @@
-import { Request, Response } from 'express';
 import { CreateUserImpl } from './authenticate_user';
 
 export class CreateUserController {
-  async handle(request: Request, response: Response) {
+  async handle(request: any, response: any) {
     const { email, username, name, password } = request.body;
 
     const createUserImpl = new CreateUserImpl();

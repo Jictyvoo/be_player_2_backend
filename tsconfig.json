@@ -1,23 +1,27 @@
 {
-  "target": "esnext",
-  "module": "commonjs",
-  "moduleResolution": "node",
   "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext"],
     "sourceMap": true,
     "outDir": "dist",
-    "sourceRoot": "./src/",
-    "strict": true,
-    "lib": ["esnext"],
     "removeComments": true,
-    "esModuleInterop": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
     "paths": {
       "@middlewares/*": ["./src/middlewares/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@routes/*": ["./src/routes/*"],
       "@entities/*": ["./src/entities/*"],
-      "@init/*": ["./src/init/*"]
-    }
+      "@init/*": ["./src/init/*"],
+      "@p2Types/*": ["./src/util/*"]
+    },
+    "esModuleInterop": true,
+    "sourceRoot": "./src/",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "noImplicitAny": true,
-  "strict": false
+  "include": ["./src/***"]
 }

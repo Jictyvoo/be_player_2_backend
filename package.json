@@ -4,8 +4,9 @@
   "description": "The challenge for \"Seja um Player 2\", on backend modality",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.ts",
-    "build": "tsc --project ./tsconfig.json",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc -p ./tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,17 +21,31 @@
     "@prisma/client": "^2.29.1",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-async-errors": "^3.1.1",
+    "fastify": "^3.20.2",
+    "fastify-cors": "^6.0.2",
     "paseto": "^3.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/express": "^4.17.13",
     "@types/node": "^16.6.1",
     "nodemon": "^2.0.12",
     "prisma": "^2.29.1",
     "ts-node": "^10.2.0",
+    "tsconfig-paths": "^3.10.1",
+    "tscpaths": "0.0.9",
     "typescript": "^4.3.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/server.ts",
+    "ext": "ts, js"
   }
 }
