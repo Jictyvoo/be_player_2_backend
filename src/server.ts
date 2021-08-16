@@ -1,16 +1,26 @@
-import { config, parse } from 'dotenv';
-import express from 'express';
-
-void function getEnv() {
-  config({ path: './.env' });
-  const buffer = Buffer.from('BASIC=basic');
-  const envConfig = parse(buffer);
-};
+import 'express-async-errors';
+import express, { NextFunction, Request, Response } from 'express';
+import { router as userRouter } from './routes';
 
 const app = express();
 const PORT = 8080;
-console.log(app.settings);
-app.get('/', (request, response) => response.send('Hello World'));
+
+// MIDDLEWARES
+app.use(express.json());
+
+// Adding our custom routes to the app
+app.use(userRouter);
+
+// Last middleware to capture internal errors
+app.use(
+  (error: Error, request: Request, response: Response, next: NextFunction) => {
+    return response.json({
+      status: 500,
+      message: 'Internal Server error',
+    });
+  }
+);
+
 app.listen(PORT, () => {
-  console.log('Server is running');
+  console.log(`Server is running on port ${PORT}`);
 });
