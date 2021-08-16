@@ -1,6 +1,6 @@
 import 'express-async-errors';
 import express, { NextFunction, Request, Response } from 'express';
-import { router as userRouter } from './routes';
+import { router as userRouter } from '@routes/user_routes';
 
 const app = express();
 const PORT = 8080;

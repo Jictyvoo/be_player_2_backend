@@ -1,5 +1,5 @@
-import { IUserRequest } from '../../entities/authentication';
-import { dbConn } from '../../init/database_client';
+import { IUserRequest } from '@entities/authentication';
+import { dbConn } from '@init/database_client';
 import { hash } from 'bcrypt';
 import { User } from '@prisma/client';
 
