@@ -1,0 +1,24 @@
+# The .dockerignore file excludes files from the container build process.
+#
+# https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+# Exclude locally vendored dependencies.
+node_modules/
+e2e/
+docs/
+*.zip
+*.md
+
+# Exclude compiled files
+dist/
+
+# Exclude "build-time" ignore files.
+.dockerignore
+
+# Exclude git history and configuration.
+.gitignore
+.git/
+
+.firebase
+.editorconfig
+npm-debug.log
