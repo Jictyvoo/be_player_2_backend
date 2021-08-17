@@ -9,7 +9,7 @@ export class CreateUserImpl {
     username,
     email,
     password,
-  }: IUserRequest): Promise<User> {
+  }: IUserRequest): Promise<{ user?: User; err?: Error }> {
     // Checks if the user already exists
     const isExistentUser = await dbConn.user.findFirst({
       where: {
@@ -18,7 +18,7 @@ export class CreateUserImpl {
     });
 
     if (isExistentUser) {
-      throw new Error('User cannot be created!');
+      return { err: new Error('User cannot be created!') };
     }
 
     const passwordHash = await hash(password, 8);
@@ -33,6 +33,6 @@ export class CreateUserImpl {
       },
     });
 
-    return newUser;
+    return { user: newUser };
   }
 }

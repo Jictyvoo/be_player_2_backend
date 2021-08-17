@@ -16,14 +16,19 @@ export class AuthenticationController {
 
     const createUserImpl = new CreateUserImpl();
 
-    const user = await createUserImpl.execute({
+    const createResult = await createUserImpl.execute({
       name: toCreate.name,
       username: toCreate.username,
       email: toCreate.email,
       password: toCreate.password,
     });
+    if (createResult.err) {
+      return reply
+        .status(HttpStatusCode.PreconditionFailed)
+        .send(createResult.err);
+    }
 
-    return reply.status(HttpStatusCode.Created).send(user);
+    return reply.status(HttpStatusCode.Created).send(createResult.user);
   }
 
   async login(request: FastifyRequest<IUserRequest>, reply: FastifyReply) {
