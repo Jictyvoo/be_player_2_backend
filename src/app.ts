@@ -23,7 +23,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   });
 
   // Adding our custom routes to the app
-  userRouter(mainServer);
-  enterpriseRouter(mainServer);
+  mainServer.register(userRouter);
+  mainServer.register(enterpriseRouter);
   return mainServer;
 }

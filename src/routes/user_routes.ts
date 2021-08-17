@@ -3,7 +3,7 @@ import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { DefaultReply, DefaultRequest } from '@p2Types/default_types';
 
-export function userRouter(
+export async function userRouter(
   server: FastifyInstance<
     Server,
     IncomingMessage,

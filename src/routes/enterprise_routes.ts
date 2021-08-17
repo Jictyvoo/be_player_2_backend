@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { DefaultReply, DefaultRequest } from '../util/default_types';
 
-export function enterpriseRouter(
+export async function enterpriseRouter(
   server: FastifyInstance<
     Server,
     IncomingMessage,
