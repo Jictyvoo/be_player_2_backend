@@ -69,17 +69,17 @@ export class AuthenticationController {
 
     const refreshToken = uuidv4();
     const authToken = await createTokenImpl.execute(
-      { id: authResult.user.id, refreshToken: refreshToken },
+      { id: authResult.user.id, sessionToken: refreshToken },
       expirationDate
     );
 
-    const encryptToken = createTempToken(authToken.refresh_token);
+    const encryptToken = createTempToken(authToken.sessionToken);
     return reply
       .status(HttpStatusCode.OK)
       .header(HttpHeaders.Authorization, encryptToken)
       .send({
         refreshToken: authToken.id,
-        expiresAt: authToken.expires_at,
+        expiresAt: authToken.expiresAt,
       });
   }
 
@@ -105,10 +105,10 @@ export class AuthenticationController {
     }
 
     const tokenData = refreshResult.token;
-    const encryptToken = await createTempToken(tokenData.refresh_token);
+    const encryptToken = await createTempToken(tokenData.sessionToken);
     return reply.header(HttpHeaders.Authorization, encryptToken).send({
       refreshToken: tokenData.id,
-      expiresAt: tokenData.expires_at,
+      expiresAt: tokenData.expiresAt,
     });
   }
 }

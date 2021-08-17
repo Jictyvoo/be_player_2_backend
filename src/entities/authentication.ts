@@ -12,5 +12,5 @@ export interface IUserRequest extends IUserCredentials {
 
 export interface IUserToken extends RouteGenericInterface {
   id: string;
-  refreshToken: string;
+  sessionToken: string;
 }

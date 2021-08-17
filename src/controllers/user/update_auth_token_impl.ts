@@ -1,19 +1,19 @@
 import { dbConn } from '@init/database_client';
-import { AuthToken } from '@prisma/client';
+import { RefreshToken } from '@prisma/client';
 
 export class UpdateAuthTokenImpl {
   async execute(
     refreshID: string,
     tempToken: string,
     expirationDate: Date
-  ): Promise<{ token?: AuthToken; err?: Error }> {
+  ): Promise<{ token?: RefreshToken; err?: Error }> {
     // Start the user creation
 
-    const foundToken = await dbConn.authToken.findFirst({
+    const foundToken = await dbConn.refreshToken.findFirst({
       where: {
         id: refreshID,
         AND: {
-          expires_at: {
+          expiresAt: {
             gte: new Date(),
           },
         },
@@ -24,10 +24,10 @@ export class UpdateAuthTokenImpl {
       return { err: new Error('Invalid refresh-token') };
     }
 
-    const authToken = await dbConn.authToken.update({
+    const authToken = await dbConn.refreshToken.update({
       data: {
-        expires_at: expirationDate,
-        refresh_token: tempToken,
+        expiresAt: expirationDate,
+        sessionToken: tempToken,
       },
       where: {
         id: refreshID,

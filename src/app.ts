@@ -14,7 +14,6 @@ export async function buildServer(): Promise<FastifyInstance> {
     let corsOptions;
     // do not include CORS headers for requests from localhost
     if (/localhost/.test(req.hostname)) {
-      console.log(req.hostname);
       corsOptions = { origin: false };
     } else {
       corsOptions = { origin: true };
