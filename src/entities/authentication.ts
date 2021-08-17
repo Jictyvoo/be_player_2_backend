@@ -5,6 +5,12 @@ export interface IUserCredentials extends RouteGenericInterface {
   username: string;
   email: string;
 }
+
 export interface IUserRequest extends IUserCredentials {
   name: string;
+}
+
+export interface IUserToken extends RouteGenericInterface {
+  id: string;
+  refreshToken: string;
 }
