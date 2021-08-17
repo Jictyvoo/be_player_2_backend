@@ -14,4 +14,5 @@ export async function userRouter(
 
   server.put<{}>('/signin', authController.createUser);
   server.post('/login', authController.login);
+  server.patch('/refresh', authController.refresh);
 }
