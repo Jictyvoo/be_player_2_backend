@@ -15,6 +15,7 @@
       "@controllers/*": ["./src/controllers/*"],
       "@routes/*": ["./src/routes/*"],
       "@entities/*": ["./src/entities/*"],
+      "@util/*": ["./src/util/*"],
       "@init/*": ["./src/init/*"],
       "@p2Types/*": ["./src/util/*"]
     },

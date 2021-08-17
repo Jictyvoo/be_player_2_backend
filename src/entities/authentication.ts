@@ -1,8 +1,10 @@
 import { RouteGenericInterface } from 'fastify/types/route';
 
-export interface IUserRequest extends RouteGenericInterface {
-  name: string;
+export interface IUserCredentials extends RouteGenericInterface {
   password: string;
   username: string;
   email: string;
+}
+export interface IUserRequest extends IUserCredentials {
+  name: string;
 }

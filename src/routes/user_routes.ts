@@ -1,7 +1,6 @@
-import { CreateUserController } from '@controllers/user/authentication_controller';
+import { AuthenticationController } from '@controllers/user/authentication_controller';
 import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
-import { DefaultReply, DefaultRequest } from '@p2Types/default_types';
 
 export async function userRouter(
   server: FastifyInstance<
@@ -11,10 +10,8 @@ export async function userRouter(
     FastifyLoggerInstance
   >
 ) {
-  const userCreateController = new CreateUserController();
+  const authController = new AuthenticationController();
 
-  server.post<{}>('/users', userCreateController.handle);
-  server.get('/', async (request: DefaultRequest, reply: DefaultReply) => {
-    return 'pong\n';
-  });
+  server.put<{}>('/signin', authController.createUser);
+  server.post('/login', authController.login);
 }
