@@ -6,10 +6,9 @@ export interface IDefaultEnvironmnet {
 }
 
 function getEnv(): IDefaultEnvironmnet {
-  config({ path: './.env' });
-  const buffer = Buffer.from('BASIC=basic');
-  const envConfig = parse(buffer);
-  return { secretKey: envConfig['SECRET_KEY'], databaseURL: '' };
+  const envConfig = config({ path: './.env' });
+  const parsedEnv = envConfig.parsed;
+  return { secretKey: parsedEnv['SECRET_KEY'] ?? 'No-KEY', databaseURL: '' };
 }
 
 export const defaultEnv = getEnv();
