@@ -11,22 +11,173 @@ generator client {
 }
 
 model User {
-  id        String      @id @default(uuid())
-  name      String      @unique
-  email     String      @unique
-  username  String
-  password  String
-  AuthToken AuthToken[]
+  id           String         @id @default(uuid())
+  name         String         @unique
+  email        String         @unique
+  username     String
+  password     String
+  RefreshToken RefreshToken[]
 
   @@map("users")
 }
 
-model AuthToken {
-  id            String   @id @default(uuid())
-  refresh_token String   @default(uuid())
-  expires_at    DateTime
-  user          User     @relation(fields: [userId], references: [id])
-  userId        String   @unique
+model RefreshToken {
+  id           String   @id @default(uuid())
+  sessionToken String   @default(uuid()) @map("session_token")
+  expiresAt    DateTime @map("expires_at")
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique @map("user_id")
 
-  @@map("auth_tokens")
+  @@map("refresh_tokens")
+}
+
+model City {
+  id         String     @id @default(uuid())
+  name       String
+  acronym    String?
+  identifier BigInt
+  District   District[]
+
+  @@map("cities")
+}
+
+model District {
+  id      String    @id @default(uuid())
+  name    String
+  Address Address[]
+  city    City      @relation(fields: [cityId], references: [id])
+  cityId  String    @map("city_id")
+
+  @@map("districts")
+}
+
+model Cep {
+  id         String    @id @default(uuid())
+  cep        Int
+  place_type String // tipo_logradouro
+  route      String // logradouro
+  Address    Address[]
+
+  @@map("ceps")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  number     String? // can have more than numbers
+  complement String?
+  reference  String?
+  cep        Cep      @relation(fields: [cepId], references: [id])
+  district   District @relation(fields: [districtId], references: [id])
+  cepId      String   @map("cep_id")
+  districtId String   @map("district_id")
+
+  Enterprise Enterprise[]
+  @@map("addresses")
+}
+
+model BranchHeadOffice {
+  id          String       @id @default(uuid())
+  identifier  Int          @unique
+  description String
+  Enterprise  Enterprise[]
+
+  @@map("branch_head_offices")
+}
+
+model EnterpriseRegistration {
+  id          String       @id @default(uuid())
+  status      Int          @unique
+  description String
+  date        DateTime
+  reason      Int
+  Enterprise  Enterprise[]
+
+  @@map("enterprise_registrations")
+}
+
+model Cnae {
+  id           String     @id @default(uuid())
+  number       BigInt     @unique
+  description  String
+  is_fiscal    Boolean
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId String     @map("enterprise_id")
+
+  @@map("cnaes")
+}
+
+model BusinessSize {
+  id          String @id @default(uuid())
+  size        Int
+  description String
+
+  Enterprise Enterprise[]
+  @@map("business_sizes")
+}
+
+model Enterprise {
+  id                               String                 @id @default(uuid())
+  cnpj                             String                 @unique
+  branch_head_office               BranchHeadOffice       @relation(fields: [branchHeadOfficeId], references: [id])
+  corporate_name                   String
+  fantasy_name                     String
+  registration                     EnterpriseRegistration @relation(fields: [enterpriseRegistrationId], references: [id])
+  outside_city_name                String?
+  legal_nature_code                BigInt?
+  activity_start_date              DateTime
+  address                          Address                @relation(fields: [addressId], references: [id])
+  size                             BusinessSize           @relation(fields: [businessSizeId], references: [id])
+  created_at                       DateTime
+  updated_at                       DateTime
+  deleted_at                       DateTime
+  qualification_of_the_responsible Int
+  share_capital                    BigInt
+  branchHeadOfficeId               String                 @map("branch_head_office_id")
+  enterpriseRegistrationId         String                 @map("enterprise_registration_id")
+  addressId                        String                 @map("address_id")
+  businessSizeId                   String                 @map("business_size_id")
+  Phones                           Phone[]
+  Cnae                             Cnae[]
+  NationalSimple                   NationalSimple[]
+  Mei                              Mei[]
+
+  @@map("enterprises")
+}
+
+model Mei {
+  id                String     @id @default(uuid())
+  special_situation String?
+  situation_date    DateTime?
+  enterprise        Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId      String     @map("enterprise_id")
+
+  @@map("meis")
+}
+
+model NationalSimple {
+  id             String     @id @default(uuid())
+  date           DateTime?
+  exclusion_date DateTime?
+  enterprise     Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId   String     @map("enterprise_id")
+
+  @@map("national_simples")
+}
+
+enum PhoneType {
+  fax
+  mobile
+  local
+}
+
+model Phone {
+  id           String     @id @default(uuid())
+  country_code String?
+  ddd          Int?
+  number       Int
+  type         PhoneType
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId String     @map("enterprise_id")
+
+  @@map("phones")
 }
