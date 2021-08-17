@@ -65,7 +65,7 @@ export class AuthenticationController {
     );
     return reply
       .status(HttpStatusCode.OK)
-      .header('Authorization', encryptToken)
+      .header(HttpHeaders.Authorization, encryptToken)
       .send({
         refreshToken: authToken.refresh_token,
         expiresAt: authToken.expires_at,
