@@ -6,7 +6,12 @@ import {
   FastifyPluginOptions,
 } from 'fastify';
 
-import { deleteEnterprise } from '@controllers/enterprise/enterprise_controller';
+import {
+  createEnterprise,
+  deleteEnterprise,
+  editEnterprise,
+  listEnterprise,
+} from '@controllers/enterprise/enterprise_controller';
 
 const _enterpriseRouter: FastifyPluginAsync = async function (
   fastify: FastifyInstance,
@@ -14,10 +19,9 @@ const _enterpriseRouter: FastifyPluginAsync = async function (
 ) {
   fastify.addHook('preParsing', pasetoware({ key: pasetoPrivateKey }));
 
-  fastify.get('/enterprises', async (request, reply) => {
-    return reply.send({ message: 'Hum, nice' });
-  });
-  fastify.put('/enterprises', async (request, reply) => {});
+  fastify.post('/enterprises', editEnterprise);
+  fastify.get('/enterprises', listEnterprise);
+  fastify.put('/enterprises', createEnterprise);
   fastify.delete('/enterprises', deleteEnterprise);
 };
 
