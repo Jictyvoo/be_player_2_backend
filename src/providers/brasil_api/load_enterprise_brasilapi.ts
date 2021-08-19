@@ -12,10 +12,14 @@ export class LoadBrasilApiEnterprise {
   }
 
   async fetchEnterprise(cnpj: string): Promise<CnpjDTO> {
-    const response = await axios.get(this.buildUrl(cnpj), {});
-    if (response.status != 200) {
+    try {
+      const response = await axios.get(this.buildUrl(cnpj), {});
+      if (response.status != 200) {
+        return null;
+      }
+      return response.data as CnpjDTO;
+    } catch {
       return null;
     }
-    return response.data as CnpjDTO;
   }
 }
