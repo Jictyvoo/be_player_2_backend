@@ -37,6 +37,7 @@ CREATE TABLE `districts` (
     `name` VARCHAR(191) NOT NULL,
     `city_id` VARCHAR(191) NOT NULL,
 
+    INDEX `city_id`(`city_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -59,6 +60,8 @@ CREATE TABLE `addresses` (
     `cep_id` VARCHAR(191) NOT NULL,
     `district_id` VARCHAR(191) NOT NULL,
 
+    INDEX `cep_id`(`cep_id`),
+    INDEX `district_id`(`district_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -93,6 +96,7 @@ CREATE TABLE `cnaes` (
     `enterprise_id` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `cnaes.number_unique`(`number`),
+    INDEX `enterprise_id`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -114,17 +118,21 @@ CREATE TABLE `enterprises` (
     `outside_city_name` VARCHAR(191),
     `legal_nature_code` BIGINT,
     `activity_start_date` DATETIME(3) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL,
-    `updated_at` DATETIME(3) NOT NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
     `qualification_of_the_responsible` INTEGER NOT NULL,
     `share_capital` BIGINT NOT NULL,
     `branch_head_office_id` VARCHAR(191) NOT NULL,
     `enterprise_registration_id` VARCHAR(191) NOT NULL,
     `address_id` VARCHAR(191) NOT NULL,
     `business_size_id` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3) NOT NULL,
+    `deleted_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `enterprises.cnpj_unique`(`cnpj`),
+    INDEX `address_id`(`address_id`),
+    INDEX `branch_head_office_id`(`branch_head_office_id`),
+    INDEX `business_size_id`(`business_size_id`),
+    INDEX `enterprise_registration_id`(`enterprise_registration_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -135,6 +143,8 @@ CREATE TABLE `meis` (
     `situation_date` DATETIME(3),
     `enterprise_id` VARCHAR(191) NOT NULL,
 
+    INDEX `enterprise_id`(`enterprise_id`),
+    UNIQUE INDEX `meis_enterprise_id_unique`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -145,6 +155,8 @@ CREATE TABLE `national_simples` (
     `exclusion_date` DATETIME(3),
     `enterprise_id` VARCHAR(191) NOT NULL,
 
+    INDEX `enterprise_id`(`enterprise_id`),
+    UNIQUE INDEX `national_simples_enterprise_id_unique`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -157,6 +169,7 @@ CREATE TABLE `phones` (
     `type` ENUM('fax', 'mobile', 'local') NOT NULL,
     `enterprise_id` VARCHAR(191) NOT NULL,
 
+    INDEX `enterprise_id`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -176,16 +189,16 @@ ALTER TABLE `addresses` ADD FOREIGN KEY (`district_id`) REFERENCES `districts`(`
 ALTER TABLE `cnaes` ADD FOREIGN KEY (`enterprise_id`) REFERENCES `enterprises`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `enterprises` ADD FOREIGN KEY (`branch_head_office_id`) REFERENCES `branch_head_offices`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `enterprises` ADD FOREIGN KEY (`enterprise_registration_id`) REFERENCES `enterprise_registrations`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `enterprises` ADD FOREIGN KEY (`address_id`) REFERENCES `addresses`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `enterprises` ADD FOREIGN KEY (`branch_head_office_id`) REFERENCES `branch_head_offices`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `enterprises` ADD FOREIGN KEY (`business_size_id`) REFERENCES `business_sizes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `enterprises` ADD FOREIGN KEY (`enterprise_registration_id`) REFERENCES `enterprise_registrations`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `meis` ADD FOREIGN KEY (`enterprise_id`) REFERENCES `enterprises`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
