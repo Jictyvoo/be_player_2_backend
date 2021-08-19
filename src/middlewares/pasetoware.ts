@@ -13,8 +13,18 @@ export const pasetoware = function (options: PasetowareOptions) {
     let hasError = false;
     try {
       const token = request.headers.authorization ?? '';
-      const payload = await pasetoV2.verify(token, options.key);
+      const payload = (await pasetoV2.verify(token, options.key)) as {
+        data: any;
+        expires_at: Date;
+      };
       hasError = payload == null;
+      if (payload != null) {
+        if (payload.expires_at.getTime <= new Date().getTime) {
+          return reply
+            .status(HttpStatusCode.Unauthorized)
+            .send(new Error('Auth token was expired'));
+        }
+      }
     } catch (err) {
       console.error(err);
       hasError = true;
