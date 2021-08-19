@@ -6,6 +6,8 @@ import {
   FastifyPluginOptions,
 } from 'fastify';
 
+import { deleteEnterprise } from '@controllers/enterprise/enterprise_controller';
+
 const _enterpriseRouter: FastifyPluginAsync = async function (
   fastify: FastifyInstance,
   _options: FastifyPluginOptions
@@ -16,7 +18,7 @@ const _enterpriseRouter: FastifyPluginAsync = async function (
     return reply.send({ message: 'Hum, nice' });
   });
   fastify.put('/enterprises', async (request, reply) => {});
-  fastify.delete('/enterprises', async (request, reply) => {});
+  fastify.delete('/enterprises', deleteEnterprise);
 };
 
 export const EnterpriseRouter = _enterpriseRouter;
