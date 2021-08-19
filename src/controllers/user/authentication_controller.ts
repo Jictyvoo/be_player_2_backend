@@ -6,7 +6,7 @@ import { AuthenticateUserImpl } from './authenticate_user_impl';
 import { UpdateAuthTokenImpl } from './update_auth_token_impl';
 import { HttpStatusCode } from '@util/status_codes';
 import { HttpHeaders } from '@util/http_headers';
-import { createPayload } from '@util/payload_helper';
+import { createPayload } from '@providers/payload_helper';
 import { defaultEnv } from '@init/environment';
 import { v4 as uuidv4 } from 'uuid';
 

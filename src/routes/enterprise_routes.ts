@@ -1,24 +1,15 @@
-import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
-import { Server, IncomingMessage, ServerResponse } from 'http';
-import { DefaultReply, DefaultRequest } from '../util/default_types';
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-export async function enterpriseRouter(
-  server: FastifyInstance<
-    Server,
-    IncomingMessage,
-    ServerResponse,
-    FastifyLoggerInstance
-  >
-) {
+export async function enterpriseRouter(server: FastifyInstance) {
   server.post<{}>(
     '/enterprises',
-    async (request: DefaultRequest, reply: DefaultReply) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       return 'Update the enterprises\n';
     }
   );
   server.get(
     '/enterprises',
-    async (request: DefaultRequest, reply: DefaultReply) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       return 'List all enterprises\n';
     }
   );
