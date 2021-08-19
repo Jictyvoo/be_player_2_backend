@@ -21,6 +21,4 @@ export async function createPayload(
   return token;
 }
 
-export async function validatePayload(): Promise<boolean> {
-  return false;
-}
+export const pasetoPrivateKey = privateKey;

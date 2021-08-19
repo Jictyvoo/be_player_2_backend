@@ -1,18 +1,20 @@
 import { AuthenticationController } from '@controllers/user/authentication_controller';
-import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
-import { Server, IncomingMessage, ServerResponse } from 'http';
+import {
+  FastifyInstance,
+  FastifyPluginAsync,
+  FastifyPluginOptions,
+} from 'fastify';
+import fp from 'fastify-plugin';
 
-export async function userRouter(
-  server: FastifyInstance<
-    Server,
-    IncomingMessage,
-    ServerResponse,
-    FastifyLoggerInstance
-  >
+const _userRouter: FastifyPluginAsync = async function (
+  instace: FastifyInstance,
+  _options: FastifyPluginOptions
 ) {
   const authController = new AuthenticationController();
 
-  server.put<{}>('/signin', authController.createUser);
-  server.post('/login', authController.login);
-  server.patch('/refresh', authController.refresh);
-}
+  instace.put('/signin', authController.createUser);
+  instace.post('/login', authController.login);
+  instace.patch('/refresh', authController.refresh);
+};
+
+export const UserRouter = fp(_userRouter);

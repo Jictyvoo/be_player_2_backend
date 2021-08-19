@@ -1,7 +1,7 @@
-import { userRouter } from '@routes/user_routes';
-import { enterpriseRouter } from '@routes/enterprise_routes';
 import { fastify, FastifyInstance } from 'fastify';
 import fastifyCors from 'fastify-cors';
+import { UserRouter } from '@routes/user_routes';
+import { EnterpriseRouter } from '@routes/enterprise_routes';
 
 export async function buildServer(): Promise<FastifyInstance> {
   const mainServer = fastify({
@@ -22,7 +22,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   });
 
   // Adding our custom routes to the app
-  mainServer.register(userRouter);
-  mainServer.register(enterpriseRouter);
+  mainServer.register(UserRouter);
+  mainServer.register(EnterpriseRouter, { prefix: 'api' });
   return mainServer;
 }

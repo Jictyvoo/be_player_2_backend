@@ -6,7 +6,7 @@ import { AuthenticateUserImpl } from './authenticate_user_impl';
 import { UpdateAuthTokenImpl } from './update_auth_token_impl';
 import { HttpStatusCode } from '@util/status_codes';
 import { HttpHeaders } from '@util/http_headers';
-import { createPayload } from '@providers/payload_helper';
+import { createPayload } from '@providers/payload_provider';
 import { defaultEnv } from '@init/environment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -73,7 +73,7 @@ export class AuthenticationController {
       expirationDate
     );
 
-    const encryptToken = createTempToken(authToken.sessionToken);
+    const encryptToken = await createTempToken(authToken.sessionToken);
     return reply
       .status(HttpStatusCode.OK)
       .header(HttpHeaders.Authorization, encryptToken)

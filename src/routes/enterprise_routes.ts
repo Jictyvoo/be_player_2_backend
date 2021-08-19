@@ -1,16 +1,22 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { pasetoware } from '@middlewares/pasetoware';
+import { pasetoPrivateKey } from '@providers/payload_provider';
+import {
+  FastifyInstance,
+  FastifyPluginAsync,
+  FastifyPluginOptions,
+} from 'fastify';
 
-export async function enterpriseRouter(server: FastifyInstance) {
-  server.post<{}>(
-    '/enterprises',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      return 'Update the enterprises\n';
-    }
-  );
-  server.get(
-    '/enterprises',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      return 'List all enterprises\n';
-    }
-  );
-}
+const _enterpriseRouter: FastifyPluginAsync = async function (
+  fastify: FastifyInstance,
+  _options: FastifyPluginOptions
+) {
+  fastify.addHook('preParsing', pasetoware({ key: pasetoPrivateKey }));
+
+  fastify.get('/enterprises', async (request, reply) => {
+    return reply.send({ message: 'Hum, nice' });
+  });
+  fastify.put('/enterprises', async (request, reply) => {});
+  fastify.delete('/enterprises', async (request, reply) => {});
+};
+
+export const EnterpriseRouter = _enterpriseRouter;
