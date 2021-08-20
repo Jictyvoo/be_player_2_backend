@@ -1,6 +1,6 @@
-import { IUserCredentials, IUserRequest } from '@entities/authentication';
+import { IUserCredentials } from '@entities/authentication';
 import { dbConn } from '@init/database_client';
-import { hash, compare } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { User } from '@prisma/client';
 
 export class AuthenticateUserImpl {

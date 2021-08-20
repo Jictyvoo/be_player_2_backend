@@ -17,8 +17,7 @@
       "@entities/*": ["./src/entities/*"],
       "@util/*": ["./src/util/*"],
       "@providers/*": ["./src/providers/*"],
-      "@init/*": ["./src/init/*"],
-      "@p2Types/*": ["./src/util/*"]
+      "@init/*": ["./src/init/*"]
     },
     "esModuleInterop": true,
     "sourceRoot": "./src/",
