@@ -2,15 +2,16 @@
 
 ## The Challenge
 
-
 ## Instructions
+
+All the challenge instructions can be find in [docs/CHALLENGE.md](CHALLENGE.md)
 
 ### Requirements
 
 In order to run this application, it's needed to have:
 
 - NodeJS-14
-- SQL database -is highly recommended to be a MySQL database.
+- SQL database - is highly recommended to be a MySQL database.
 
 ### Running
 
