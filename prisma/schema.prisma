@@ -32,9 +32,10 @@ model City {
   id         String     @id @default(uuid())
   name       String
   acronym    String?
-  identifier BigInt
+  identifier BigInt     @unique
   District   District[]
 
+  @@index([name], name: "city_name")
   @@map("cities")
 }
 
@@ -46,16 +47,18 @@ model District {
   Address Address[]
 
   @@index([cityId], name: "city_id")
+  @@index([name], name: "district_name")
   @@map("districts")
 }
 
 model Cep {
   id        String    @id @default(uuid())
-  cep       Int
+  cep       String    @unique
   placeType String    @map("place_type")
   route     String
   Address   Address[]
 
+  @@index([cep], name: "cep")
   @@map("ceps")
 }
 
@@ -86,9 +89,9 @@ model BranchHeadOffice {
 
 model EnterpriseRegistration {
   id          String       @id @default(uuid())
-  status      Int          @unique
+  status      Int
   description String
-  date        DateTime
+  date        DateTime?
   reason      Int
   Enterprise  Enterprise[]
 
@@ -98,7 +101,7 @@ model EnterpriseRegistration {
 model Cnae {
   id           String     @id @default(uuid())
   number       BigInt     @unique
-  description  String
+  description  String?
   isFiscal     Boolean    @map("is_fiscal")
   enterpriseId String     @map("enterprise_id")
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
@@ -109,7 +112,7 @@ model Cnae {
 
 model BusinessSize {
   id          String       @id @default(uuid())
-  size        Int
+  size        Int          @unique
   description String
   Enterprise  Enterprise[]
 
@@ -131,12 +134,12 @@ model Enterprise {
   addressId                     String                 @map("address_id")
   businessSizeId                String                 @map("business_size_id")
   createdAt                     DateTime               @map("created_at")
-  updatedAt                     DateTime               @map("updated_at")
-  deletedAt                     DateTime               @map("deleted_at")
+  updatedAt                     DateTime?              @map("updated_at")
+  deletedAt                     DateTime?              @map("deleted_at")
   Address                       Address                @relation(fields: [addressId], references: [id])
   BranchHeadOffice              BranchHeadOffice       @relation(fields: [branchHeadOfficeId], references: [id])
-  size                          BusinessSize           @relation(fields: [businessSizeId], references: [id])
-  registration                  EnterpriseRegistration @relation(fields: [enterpriseRegistrationId], references: [id])
+  Size                          BusinessSize           @relation(fields: [businessSizeId], references: [id])
+  Registration                  EnterpriseRegistration @relation(fields: [enterpriseRegistrationId], references: [id])
   Cnae                          Cnae[]
   Mei                           Mei?
   NationalSimple                NationalSimple?

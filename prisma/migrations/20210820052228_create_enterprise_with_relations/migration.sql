@@ -2,10 +2,14 @@
   Warnings:
 
   - You are about to drop the `auth_tokens` table. If the table is not empty, all the data it contains will be lost.
+  - A unique constraint covering the columns `[username]` on the table `users` will be added. If there are existing duplicate values, this will fail.
 
 */
 -- DropForeignKey
 ALTER TABLE `auth_tokens` DROP FOREIGN KEY `auth_tokens_ibfk_1`;
+
+-- DropIndex
+DROP INDEX `users.name_unique` ON `users`;
 
 -- DropTable
 DROP TABLE `auth_tokens`;
@@ -28,6 +32,8 @@ CREATE TABLE `cities` (
     `acronym` VARCHAR(191),
     `identifier` BIGINT NOT NULL,
 
+    UNIQUE INDEX `cities.identifier_unique`(`identifier`),
+    INDEX `city_name`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -38,16 +44,19 @@ CREATE TABLE `districts` (
     `city_id` VARCHAR(191) NOT NULL,
 
     INDEX `city_id`(`city_id`),
+    INDEX `district_name`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `ceps` (
     `id` VARCHAR(191) NOT NULL,
-    `cep` INTEGER NOT NULL,
+    `cep` VARCHAR(191) NOT NULL,
     `place_type` VARCHAR(191) NOT NULL,
     `route` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `ceps.cep_unique`(`cep`),
+    INDEX `cep`(`cep`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -80,10 +89,9 @@ CREATE TABLE `enterprise_registrations` (
     `id` VARCHAR(191) NOT NULL,
     `status` INTEGER NOT NULL,
     `description` VARCHAR(191) NOT NULL,
-    `date` DATETIME(3) NOT NULL,
+    `date` DATETIME(3),
     `reason` INTEGER NOT NULL,
 
-    UNIQUE INDEX `enterprise_registrations.status_unique`(`status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -91,7 +99,7 @@ CREATE TABLE `enterprise_registrations` (
 CREATE TABLE `cnaes` (
     `id` VARCHAR(191) NOT NULL,
     `number` BIGINT NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191),
     `is_fiscal` BOOLEAN NOT NULL,
     `enterprise_id` VARCHAR(191) NOT NULL,
 
@@ -106,6 +114,7 @@ CREATE TABLE `business_sizes` (
     `size` INTEGER NOT NULL,
     `description` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `business_sizes.size_unique`(`size`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -125,8 +134,8 @@ CREATE TABLE `enterprises` (
     `address_id` VARCHAR(191) NOT NULL,
     `business_size_id` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL,
-    `updated_at` DATETIME(3) NOT NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3),
+    `deleted_at` DATETIME(3),
 
     UNIQUE INDEX `enterprises.cnpj_unique`(`cnpj`),
     INDEX `address_id`(`address_id`),
@@ -143,8 +152,8 @@ CREATE TABLE `meis` (
     `situation_date` DATETIME(3),
     `enterprise_id` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `meis.enterprise_id_unique`(`enterprise_id`),
     INDEX `enterprise_id`(`enterprise_id`),
-    UNIQUE INDEX `meis_enterprise_id_unique`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -155,8 +164,8 @@ CREATE TABLE `national_simples` (
     `exclusion_date` DATETIME(3),
     `enterprise_id` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `national_simples.enterprise_id_unique`(`enterprise_id`),
     INDEX `enterprise_id`(`enterprise_id`),
-    UNIQUE INDEX `national_simples_enterprise_id_unique`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -172,6 +181,9 @@ CREATE TABLE `phones` (
     INDEX `enterprise_id`(`enterprise_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateIndex
+CREATE UNIQUE INDEX `users.username_unique` ON `users`(`username`);
 
 -- AddForeignKey
 ALTER TABLE `refresh_tokens` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
