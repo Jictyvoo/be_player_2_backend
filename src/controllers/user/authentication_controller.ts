@@ -45,7 +45,10 @@ export class AuthenticationController {
         .send(createResult.err);
     }
 
-    return reply.status(HttpStatusCode.Created).send(createResult.user);
+    return reply.status(HttpStatusCode.Created).send({
+      username: createResult.user.username,
+      email: createResult.user.email,
+    });
   }
 
   async login(request: FastifyRequest<IUserRequest>, reply: FastifyReply) {
