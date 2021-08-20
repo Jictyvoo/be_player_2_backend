@@ -12,13 +12,13 @@ export class ListEnterpriseImpl {
       where: {
         AND: {
           deletedAt: {
-            not: undefined,
+            equals: null,
           },
         },
       },
     });
 
-    if (!allUndeleted) {
+    if (!allUndeleted || allUndeleted.length <= 0) {
       return {
         err: new Error('There is no enterprise to list!'),
       };

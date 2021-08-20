@@ -10,6 +10,11 @@ export class DeleteEnterpriseImpl {
     const existentEnterprise = await dbConn.enterprise.findFirst({
       where: {
         cnpj: cnpj,
+        AND: {
+          deletedAt: {
+            equals: null,
+          },
+        },
       },
     });
 
@@ -20,7 +25,10 @@ export class DeleteEnterpriseImpl {
     }
 
     // Start the user creation
-    const deletedEnterprise = await dbConn.enterprise.delete({
+    const deletedEnterprise = await dbConn.enterprise.update({
+      data: {
+        deletedAt: new Date(),
+      },
       where: {
         cnpj: cnpj,
       },

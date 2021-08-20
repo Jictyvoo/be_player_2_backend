@@ -5,6 +5,18 @@ import { ListEnterpriseImpl } from './list_enterprise_impl';
 import { HttpStatusCode } from '@util/status_codes';
 import { LoadBrasilApiEnterprise } from '@providers/brasil_api/load_enterprise_brasilapi';
 import { CreateEnterpriseImpl } from './create_enterprise_impl';
+import { Enterprise } from '@prisma/client';
+
+function jsonifyEnterprise(enterprise: Enterprise) {
+  return {
+    cnpj: enterprise.cnpj,
+    'fantasy-name': enterprise.fantasyName,
+    name: enterprise.corporateName,
+    'share-capital': enterprise.shareCapital.toString(),
+    'activity-start-date': enterprise.activityStartDate,
+  };
+}
+
 export const createEnterprise = async (
   request: FastifyRequest,
   reply: FastifyReply
@@ -29,7 +41,9 @@ export const createEnterprise = async (
   if (creationResult.err) {
     return reply.status(HttpStatusCode.Conflict).send(creationResult.err);
   }
-  return reply.status(HttpStatusCode.OK).send(dataFetched);
+  return reply
+    .status(HttpStatusCode.Created)
+    .send(jsonifyEnterprise(creationResult.enterprise));
 };
 
 export const deleteEnterprise = async (
@@ -37,6 +51,11 @@ export const deleteEnterprise = async (
   reply: FastifyReply
 ) => {
   const toDelete = (request.body ?? { cnpj: '' }) as IEnterpriseRequest;
+  if (toDelete.cnpj?.length <= 0) {
+    return reply
+      .status(HttpStatusCode.BadRequest)
+      .send(new Error('A CNPJ is needed to delete the enterprise'));
+  }
 
   const deleteEnterpriseImpl = new DeleteEnterpriseImpl();
 
@@ -47,7 +66,9 @@ export const deleteEnterprise = async (
     return reply.status(HttpStatusCode.BadRequest).send(deleteResult.err);
   }
 
-  return reply.status(HttpStatusCode.Created).send(deleteResult.enterprise);
+  return reply
+    .status(HttpStatusCode.Accepted)
+    .send(jsonifyEnterprise(deleteResult.enterprise));
 };
 
 export const listEnterprise = async (
@@ -62,8 +83,15 @@ export const listEnterprise = async (
       .send(new Error('Minimum page number is 1'));
   }
   const listImpl = new ListEnterpriseImpl();
-  const allEnterprises = listImpl.execute({ pageNumber: page });
-  return reply.status(HttpStatusCode.OK).send(allEnterprises);
+  const listResult = await listImpl.execute({ pageNumber: page });
+  if (listResult.err) {
+    return reply.status(HttpStatusCode.NoContent).send(listResult.err);
+  }
+  return reply.status(HttpStatusCode.OK).send(
+    listResult.enterprises.map((value) => {
+      return jsonifyEnterprise(value);
+    })
+  );
 };
 
 export const editEnterprise = async (
